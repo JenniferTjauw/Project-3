@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Read the data into a pandas DataFrame.  
-cijferset_pernis = pd.read_csv("C:/Users/Gebruiker/Desktop/Map1.csv")  
+cijferset = pd.read_csv("C:/Users/Gebruiker/Desktop/Map1.csv")  
 
 # These are the "Tableau 20" colors as RGB.  
 tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),  
@@ -35,18 +35,18 @@ ax.get_yaxis().tick_left()
 
 # Limit the range of the plot to only where the data is.  
 # Avoid unnecessary whitespace.  
-plt.ylim(0, 90)  
+plt.ylim(0, 30)  
 plt.xlim(2006, 2011)  
 
 # Make sure your axis ticks are large enough to be easily read.  
 # You don't want your viewers squinting to read your plot.  
-plt.yticks(range(0, 91, 10), [str(x) + "%" for x in range(0, 91, 10)], fontsize=14)  
+plt.yticks(range(0, 26, 5), [str(x) + "%" for x in range(0, 26, 5)], fontsize=14)  
 plt.xticks(fontsize=14)  
 
 # Provide tick lines across the plot to help your viewers trace along  
 # the axis ticks. Make sure that the lines are light and small so they  
 # don't obscure the primary data lines.  
-for y in range(10, 91, 10):  
+for y in range(0, 26, 1):  
     plt.plot(range(1968, 2012), [y] * len(range(1968, 2012)), "--", lw=0.5, color="black", alpha=0.3)  
 
 # Remove the tick marks; they are unnecessary with the tick lines we just plotted.  
@@ -55,22 +55,48 @@ plt.tick_params(axis="both", which="both", bottom="off", top="off",
 
 # Now that the plot is prepared, it's time to actually plot the data!  
 # Note that I plotted the majors in order of the highest % in the final year.  
-majors = ['Pernis', 'Rotterdam']  
+deelgemeentes = ['Charlois', 'Delfshaven', 'Feijenoord', 'Hillegersberg-Schiebroek', 'Hoek van Holland', 'Hoogvliet', 
+                 'IJsselmonde', 'Kralingen-Crooswijk', 'Noord', 'Overschie', 'Pernis', 'Prins Alexander', 'Stadscentrum', 'Rotterdam']  
 
-for rank, column in enumerate(majors):  
+for rank, column in enumerate(deelgemeentes):  
     # Plot each line separately with its own color, using the Tableau 20  
     # color set in order.  
-    plt.plot(cijferset_pernis.Year.values,  
-            cijferset_pernis[column.replace("\n", " ")].values,  
+    plt.plot(cijferset.Year.values,  
+            cijferset[column.replace("\n", " ")].values,  
             lw=2.5, color=tableau20[rank])  
 
     # Add a text label to the right end of every line. Most of the code below  
     # is adding specific offsets y position because some labels overlapped.  
-    y_pos = cijferset_pernis[column.replace("\n", " ")].values[-1] - 0.5  
-    if column == "Pernis":  
-        y_pos += 0.5  
+    y_pos = cijferset[column.replace("\n", " ")].values[-1] - 0.5  
+    if column == "Charlois":  
+        y_pos += 12.0  
+    elif column == "Delfshaven":  
+        y_pos += 10.0  
+    elif column == "Feijenoord":  
+        y_pos += 10.0  
+    elif column == "Hillegersberg-Schiebroek":  
+        y_pos += 13.0  
+    elif column == "Hoek van Holland":  
+        y_pos += 14.25
+    elif column == "Hoogvliet":  
+        y_pos += 10.25  
+    elif column == "IJsselmonde":  
+        y_pos += 6.5  
+    elif column == "Kralingen-Crooswijk":  
+        y_pos += 4.5  
+    elif column == "Noord":  
+        y_pos += 2.5  
+    elif column == "Overschie":  
+        y_pos += 3.0  
+    elif column == "Pernis":  
+        y_pos += 4.5   
+    elif column == "Prins Alexander":  
+        y_pos += 4.0  
+    elif column == "Stadscentrum":  
+        y_pos -= 1.75  
     elif column == "Rotterdam":  
-        y_pos -= 0.5  
+        y_pos -= 1.75 
+
 
     # Again, make sure that all labels are large enough to be easily read  
     # by the viewer.  
@@ -84,7 +110,7 @@ for rank, column in enumerate(majors):
 
 # Note that if the title is descriptive enough, it is unnecessary to include  
 # axis labels; they are self-evident, in this plot's case.
-plt.text(2009, 93, "Buurtprobleem fietsendiefstal (2006-2011)", fontsize=17, ha="center")  
+plt.text(2009, 28, "Diefstal per deelgemeente (2006-2011)", fontsize=17, ha="center")  
 
 # Always include your data source(s) and copyright notice! And for your  
 # data sources, tell your viewers exactly where the data came from,  
@@ -92,13 +118,12 @@ plt.text(2009, 93, "Buurtprobleem fietsendiefstal (2006-2011)", fontsize=17, ha=
 # that you used data from the "U.S. Census Bureau" is completely useless:  
 # the U.S. Census Bureau provides all kinds of data, so how are your  
 # viewers supposed to know which data set you used?  
-plt.text(2006, -10, "Data source: http://rotterdamopendata.nl/dataset/veiligheidsindex-rotterdam-2012"  
-       "\nAuthor: groep 5 "  
-       "\nNote: This is a test", fontsize=10)  
+plt.text(2006, -3, "Data source: http://rotterdamopendata.nl/dataset/veiligheidsindex-rotterdam-2012"  
+       "\nAuthor: Projectgroup 5 ", fontsize=10)  
 
 # Finally, save the figure as a PNG.  
 # You can also save it as a PDF, JPEG, etc.  
 # Just change the file extension in this call.  
 # bbox_inches="tight" removes all the extra whitespace on the edges of your plot.  
-plt.savefig("percent.png", bbox_inches="tight")
+plt.savefig("Diefstal2006-2011.png", bbox_inches="tight")
 plt.show()
