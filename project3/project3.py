@@ -33,13 +33,10 @@ LARGE_FONT= ("Verdana", 12)
 
 
 class Main(tk.Tk):
-
     def __init__(self, *args, **kwargs):
-        
         tk.Tk.__init__(self, *args, **kwargs)
 
         tk.Tk.wm_title(self, "Data application.")
-        
         
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand = True)
@@ -48,24 +45,19 @@ class Main(tk.Tk):
 
         self.frames = {}
 
-        for F in (StartPage, PageOne, PageTwo, PageThree, PageFour, PageFive, PageSix, PageSeven, PageEight, PageNine):
-
+        for F in (StartPage, PageOne, PageTwo, PageThree, PageFour, PageFive, PageSix, PageSeven, PageEight, PageNine, PageTen, PageEleven):
             frame = F(container, self)
-
             self.frames[F] = frame
-
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(StartPage)
 
     def show_frame(self, cont):
-
         frame = self.frames[cont]
         frame.tkraise()
 
         
 class StartPage(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
         label = tk.Label(self, text="Start Page", font=LARGE_FONT)
@@ -107,10 +99,17 @@ class StartPage(tk.Frame):
                             command=lambda: controller.show_frame(PageNine))
         button9.pack()
 
+        button10 = ttk.Button(self, text="Average Safetyproblems",
+                            command=lambda: controller.show_frame(PageTen))
+        button10.pack()
+
+        button11 = ttk.Button(self, text="Average Safetyproblems",
+                            command=lambda: controller.show_frame(PageEleven))
+        button11.pack()
+
 
 
 class PageOne(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Theft by borough (2006-2011)", font=LARGE_FONT)
@@ -124,7 +123,6 @@ class PageOne(tk.Frame):
 
 
 class PageTwo(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Menace by borough (2006-2011)", font=LARGE_FONT)
@@ -138,7 +136,6 @@ class PageTwo(tk.Frame):
 
 
 class PageThree(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Violence by borough (2006-2011)", font=LARGE_FONT)
@@ -150,7 +147,6 @@ class PageThree(tk.Frame):
 
 
 class PageFour(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Burglary by borough (2006-2011)", font=LARGE_FONT)
@@ -163,7 +159,6 @@ class PageFour(tk.Frame):
 
 
 class PageFive(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Nuisance by borough (2006-2011)", font=LARGE_FONT)
@@ -176,7 +171,6 @@ class PageFive(tk.Frame):
      
 
 class PageSix(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Environment by borough (2006-2011)", font=LARGE_FONT)
@@ -189,7 +183,6 @@ class PageSix(tk.Frame):
 
 
 class PageSeven(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Vandalism by borough (2006-2011)", font=LARGE_FONT)
@@ -202,7 +195,6 @@ class PageSeven(tk.Frame):
 
 
 class PageEight(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Traffic by borough (2006-2011)", font=LARGE_FONT)
@@ -221,7 +213,6 @@ class PageEight(tk.Frame):
         #plt.text(2011.30, y_pos, column, fontsize=10, color=tableau20[rank])
 
 class PageNine(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Average Safetyproblems (2006-2011)", font=LARGE_FONT)
@@ -234,7 +225,6 @@ class PageNine(tk.Frame):
         f = Figure(figsize=(5,5), dpi=100) 
 
         plt = f.add_subplot(111)
-
 
         for rank, column in enumerate(deelgemeentes):  
             plt.plot(df.Year.values,  
@@ -258,6 +248,29 @@ class PageNine(tk.Frame):
         toolbar.update()
         canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
+
+class PageTen(tk.Frame):
+    # Speciaal plekje voor GGD grafiek
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Wijzig naam", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+
+class PageEleven(tk.Frame):
+    # Ditto
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Wijzig naam", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
 
 
 app = Main()
