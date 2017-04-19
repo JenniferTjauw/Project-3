@@ -1,0 +1,73 @@
+class PageTen(tk.Frame):
+    # Speciaal plekje voor GGD grafiek
+    # vraag 1 Percentage inwoners van 16 jaar en ouder dat ooit slachtoffer is geweest van huiselijk geweld
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Citizen's health", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+        f = Figure(figsize=(5,5), dpi=100) 
+
+        plt = f.add_subplot(111)
+        # graph information is gathered here from the csv file and given a color
+        for rank, column in enumerate(deelgemeentes):  
+            
+            plt.plot(gezondheidinwoner.Year.values,
+                     gezondheidinwoner[column.replace("\n", " ")].values, marker = 'o', linestyle = '--',
+                     linewidth = 2.5, color=tableau20[rank],label = deelgemeentes[rank])
+            
+            plt.set_xlabel('Year')
+            plt.set_ylabel('Percentage')
+            plt.legend(loc='upper right')
+
+
+        canvas = FigureCanvasTkAgg(f, self)
+        canvas.show()
+        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+                     
+
+
+class PageEleven(tk.Frame):
+    # Ditto
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Safety citizen", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+        f = Figure(figsize=(5,5), dpi=100) 
+
+        plt = f.add_subplot(111)
+        # graph information is gathered here from the csv file and given a color
+        for rank, column in enumerate(deelgemeentes):  
+            
+            plt.plot(Veiliginwoners.Year.values,
+                     Veiliginwoners[column.replace("\n", " ")].values, marker = 'o', linestyle = '--',
+                     linewidth = 1.0, color=tableau20[rank],label = deelgemeentes[rank])
+            
+            plt.set_xlabel('Year')
+            plt.set_ylabel('Percentage')
+            plt.legend(loc='upper right')
+
+        canvas = FigureCanvasTkAgg(f, self)
+        canvas.show()
+        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+# runs it 
+app = Main()
+app.mainloop()
