@@ -32,13 +32,13 @@ for i in range(len(tableau20)):
 LARGE_FONT= ("Verdana", 12)
 
 
-class SeaofBTCapp(tk.Tk):
+class Main(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         
         tk.Tk.__init__(self, *args, **kwargs)
 
-        tk.Tk.wm_title(self, "Sea of BTC client")
+        tk.Tk.wm_title(self, "Data application.")
         
         
         container = tk.Frame(self)
@@ -260,5 +260,5 @@ class PageNine(tk.Frame):
 
 
 
-app = SeaofBTCapp()
+app = Main()
 app.mainloop()
