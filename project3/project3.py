@@ -1,129 +1,264 @@
-import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
+import plotly.plotly as py
+import plotly.graph_objs as go
 
-# Read the data into a pandas DataFrame.  
-cijferset = pd.read_csv("C:/Users/Gebruiker/Desktop/Map1.csv")  
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.figure import Figure
 
-# These are the "Tableau 20" colors as RGB.  
+import matplotlib.pyplot as plt
+
+import tkinter as tk
+from tkinter import ttk
+
+df = pd.read_csv("C:/Users/Gebruiker/Desktop/Project 3/csv bestanden/Tevredenheid.csv")
+gemid = pd.read_csv("C:/Users/Gebruiker/Desktop/Project 3/csv bestanden/Gemiddelde.csv")
+
+deelgemeentes = ['Rotterdam']  
+
 tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),  
              (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),  
              (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),  
              (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),  
-             (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]  
+             (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
 
-# Scale the RGB values to the [0, 1] range, which is the format matplotlib accepts.  
 for i in range(len(tableau20)):  
     r, g, b = tableau20[i]  
-    tableau20[i] = (r / 255., g / 255., b / 255.)  
-
-# You typically want your plot to be ~1.33x wider than tall. This plot is a rare  
-# exception because of the number of lines being plotted on it.  
-# Common sizes: (10, 7.5) and (12, 9)  
-plt.figure(figsize=(12, 9))  
-
-# Remove the plot frame lines. They are unnecessary chartjunk.  
-ax = plt.subplot(111)  
-ax.spines["top"].set_visible(False)  
-ax.spines["bottom"].set_visible(False)  
-ax.spines["right"].set_visible(False)  
-ax.spines["left"].set_visible(False)  
-
-# Ensure that the axis ticks only show up on the bottom and left of the plot.  
-# Ticks on the right and top of the plot are generally unnecessary chartjunk.  
-ax.get_xaxis().tick_bottom()  
-ax.get_yaxis().tick_left()  
-
-# Limit the range of the plot to only where the data is.  
-# Avoid unnecessary whitespace.  
-plt.ylim(0, 30)  
-plt.xlim(2006, 2011)  
-
-# Make sure your axis ticks are large enough to be easily read.  
-# You don't want your viewers squinting to read your plot.  
-plt.yticks(range(0, 26, 5), [str(x) + "%" for x in range(0, 26, 5)], fontsize=14)  
-plt.xticks(fontsize=14)  
-
-# Provide tick lines across the plot to help your viewers trace along  
-# the axis ticks. Make sure that the lines are light and small so they  
-# don't obscure the primary data lines.  
-for y in range(0, 26, 1):  
-    plt.plot(range(1968, 2012), [y] * len(range(1968, 2012)), "--", lw=0.5, color="black", alpha=0.3)  
-
-# Remove the tick marks; they are unnecessary with the tick lines we just plotted.  
-plt.tick_params(axis="both", which="both", bottom="off", top="off",  
-                labelbottom="on", left="off", right="off", labelleft="on")  
-
-# Now that the plot is prepared, it's time to actually plot the data!  
-# Note that I plotted the majors in order of the highest % in the final year.  
-deelgemeentes = ['Charlois', 'Delfshaven', 'Feijenoord', 'Hillegersberg-Schiebroek', 'Hoek van Holland', 'Hoogvliet', 
-                 'IJsselmonde', 'Kralingen-Crooswijk', 'Noord', 'Overschie', 'Pernis', 'Prins Alexander', 'Stadscentrum', 'Rotterdam']  
-
-for rank, column in enumerate(deelgemeentes):  
-    # Plot each line separately with its own color, using the Tableau 20  
-    # color set in order.  
-    plt.plot(cijferset.Year.values,  
-            cijferset[column.replace("\n", " ")].values,  
-            lw=2.5, color=tableau20[rank])  
-
-    # Add a text label to the right end of every line. Most of the code below  
-    # is adding specific offsets y position because some labels overlapped.  
-    y_pos = cijferset[column.replace("\n", " ")].values[-1] - 0.5  
-    if column == "Charlois":  
-        y_pos += 12.0  
-    elif column == "Delfshaven":  
-        y_pos += 10.0  
-    elif column == "Feijenoord":  
-        y_pos += 10.0  
-    elif column == "Hillegersberg-Schiebroek":  
-        y_pos += 13.0  
-    elif column == "Hoek van Holland":  
-        y_pos += 14.25
-    elif column == "Hoogvliet":  
-        y_pos += 10.25  
-    elif column == "IJsselmonde":  
-        y_pos += 6.5  
-    elif column == "Kralingen-Crooswijk":  
-        y_pos += 4.5  
-    elif column == "Noord":  
-        y_pos += 2.5  
-    elif column == "Overschie":  
-        y_pos += 3.0  
-    elif column == "Pernis":  
-        y_pos += 4.5   
-    elif column == "Prins Alexander":  
-        y_pos += 4.0  
-    elif column == "Stadscentrum":  
-        y_pos -= 1.75  
-    elif column == "Rotterdam":  
-        y_pos -= 1.75 
+    tableau20[i] = (r / 255., g / 255., b / 255.)
 
 
-    # Again, make sure that all labels are large enough to be easily read  
-    # by the viewer.  
-    plt.text(2011.05, y_pos, column, fontsize=10, color=tableau20[rank])  
+LARGE_FONT= ("Verdana", 12)
 
-# matplotlib's title() call centers the title on the plot, but not the graph,  
-# so I used the text() call to customize where the title goes.  
 
-# Make the title big enough so it spans the entire plot, but don't make it  
-# so big that it requires two lines to show.  
+class SeaofBTCapp(tk.Tk):
 
-# Note that if the title is descriptive enough, it is unnecessary to include  
-# axis labels; they are self-evident, in this plot's case.
-plt.text(2009, 28, "Diefstal per deelgemeente (2006-2011)", fontsize=17, ha="center")  
+    def __init__(self, *args, **kwargs):
+        
+        tk.Tk.__init__(self, *args, **kwargs)
 
-# Always include your data source(s) and copyright notice! And for your  
-# data sources, tell your viewers exactly where the data came from,  
-# preferably with a direct link to the data. Just telling your viewers  
-# that you used data from the "U.S. Census Bureau" is completely useless:  
-# the U.S. Census Bureau provides all kinds of data, so how are your  
-# viewers supposed to know which data set you used?  
-plt.text(2006, -3, "Data source: http://rotterdamopendata.nl/dataset/veiligheidsindex-rotterdam-2012"  
-       "\nAuthor: Projectgroup 5 ", fontsize=10)  
+        tk.Tk.wm_title(self, "Sea of BTC client")
+        
+        
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand = True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
-# Finally, save the figure as a PNG.  
-# You can also save it as a PDF, JPEG, etc.  
-# Just change the file extension in this call.  
-# bbox_inches="tight" removes all the extra whitespace on the edges of your plot.  
-plt.savefig("Diefstal2006-2011.png", bbox_inches="tight")
-plt.show()
+        self.frames = {}
+
+        for F in (StartPage, PageOne, PageTwo, PageThree, PageFour, PageFive, PageSix, PageSeven, PageEight, PageNine):
+
+            frame = F(container, self)
+
+            self.frames[F] = frame
+
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame(StartPage)
+
+    def show_frame(self, cont):
+
+        frame = self.frames[cont]
+        frame.tkraise()
+
+        
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        label = tk.Label(self, text="Start Page", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button = ttk.Button(self, text="Theft",
+                            command=lambda: controller.show_frame(PageOne))
+        button.pack()
+
+        button2 = ttk.Button(self, text="Menace",
+                            command=lambda: controller.show_frame(PageTwo))
+        button2.pack()
+
+        button3 = ttk.Button(self, text="Violence",
+                            command=lambda: controller.show_frame(PageThree))
+        button3.pack()
+
+        button4 = ttk.Button(self, text="Burglary",
+                            command=lambda: controller.show_frame(PageFour))
+        button4.pack()
+
+        button5 = ttk.Button(self, text="Nuisance",
+                            command=lambda: controller.show_frame(PageFive))
+        button5.pack()
+
+        button6 = ttk.Button(self, text="Environment",
+                            command=lambda: controller.show_frame(PageSix))
+        button6.pack()
+
+        button7= ttk.Button(self, text="Vandalism",
+                            command=lambda: controller.show_frame(PageSeven))
+        button7.pack()
+
+        button8 = ttk.Button(self, text="Traffic",
+                            command=lambda: controller.show_frame(PageEight))
+        button8.pack()
+
+        button9 = ttk.Button(self, text="Average Safetyproblems",
+                            command=lambda: controller.show_frame(PageNine))
+        button9.pack()
+
+
+
+class PageOne(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Theft by borough (2006-2011)", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+
+
+
+class PageTwo(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Menace by borough (2006-2011)", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+
+
+
+class PageThree(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Violence by borough (2006-2011)", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+
+class PageFour(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Burglary by borough (2006-2011)", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+
+
+class PageFive(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Nuisance by borough (2006-2011)", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+     
+
+class PageSix(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Environment by borough (2006-2011)", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+
+
+class PageSeven(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Vandalism by borough (2006-2011)", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+
+
+class PageEight(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Traffic by borough (2006-2011)", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+
+
+
+
+
+        #y_pos = df[column.replace("\n", " ")].values[-1] - 0.5
+        #plt.text(2011.30, y_pos, column, fontsize=10, color=tableau20[rank])
+
+class PageNine(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Average Safetyproblems (2006-2011)", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        button1 = ttk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+        f = Figure(figsize=(5,5), dpi=100) 
+
+        plt = f.add_subplot(111)
+
+
+        for rank, column in enumerate(deelgemeentes):  
+            plt.plot(df.Year.values,  
+            df[column.replace("\n", " ")].values,  
+            lw=2.5, color=tableau20[rank], label = 'Satisfaction Rotterdam')
+            
+            plt.plot(gemid.Year.values,
+                     gemid[column.replace("\n", " ")].values, color = 'r', marker = 'o', linestyle = '--',
+                     linewidth = 2.0, label = 'Safetyproblems Rotterdam')
+            
+            plt.set_xlabel('Year')
+            plt.set_ylabel('Percentage')
+            plt.legend(loc='upper right')
+
+
+        canvas = FigureCanvasTkAgg(f, self)
+        canvas.show()
+        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+
+
+app = SeaofBTCapp()
+app.mainloop()
